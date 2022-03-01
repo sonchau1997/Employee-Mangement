@@ -1,0 +1,89 @@
+<div class="card mt-2">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-8">
+                <h5 style="color: blue;">Bảng lương tháng:{{month}} năm:{{year}} </h5>
+            </div>
+            <div class="col">
+                <span>Tháng: </span>
+                <select (change)="selectMonth($event.target.value)">
+                    <option *ngFor="let i of [1,2,3,4,5,6,7,8,9,10,11,12]" [value]="i">
+                        {{i}}
+                    </option>
+                </select>
+                <span>Năm: </span>
+                <select (change)="selectYear($event.target.value)">
+                    <option *ngFor="let i of [2020,2021,2022]" [value]="i">
+                        {{i}}
+                    </option>
+                </select>
+            </div>
+            <div class="col-auto">
+                <button type="button" (click)="countSalary()" class="btn btn-success"><i class="fa fa-dollar"></i>
+                    Tính lương</button>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <ngx-datatable class="material" [rows]="salaryHistories" [rowHeight]="50" [columnMode]="'force'"
+            [sortType]="'multi'" [headerHeight]="50" [footerHeight]="50" [externalPaging]="true"
+            [count]="paging.totalItems" [offset]="paging.page - 1" [limit]="paging.pageLimit"
+            (page)="loadSalaryHistories($event)">
+            <ngx-datatable-column name="Tên">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                    <span class="cursor-hover" (click)="choose(row)">{{ row.employee.lastname}}
+                        {{ row.employee.firstname}}</span>
+                </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Lương Gross">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                    <span style="color: blue;">{{ row.grossSalary | currency:'VND'}}</span>
+                </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Lương Net">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                    <span style="color: blue;">{{ row.netSalary | currency:'VND'}}</span>
+                </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Số ngày làm">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                    <span>{{ row.workDay}}</span>
+                </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Hệ số lương">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                    <span>{{ row.salaryCoefficient}}</span>
+                </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Tiền thuế">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                    <span>{{ row.taxMoney| currency:'VND'}}</span>
+                </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Tiền thưởng">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                    <span>{{ row.rewardMoney| currency:'VND'}}</span>
+                </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Tiền phạt">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                    <span>{{ row.publishMoney| currency:'VND'}}</span>
+                </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Tiền bảo hiểm">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                    <span>{{ row.insurranceMoney| currency:'VND'}}</span>
+                </ng-template>
+            </ngx-datatable-column>
+        </ngx-datatable>
+    </div>
+</div>
+
+<ng-template #notifyModalTemplate>
+    <div class="modal-body" style="text-align: center;">
+        {{message}}
+        <button type="button" class="close pull-right" aria-label="Close" (click)="notifyModalRef.hide()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+</ng-template>

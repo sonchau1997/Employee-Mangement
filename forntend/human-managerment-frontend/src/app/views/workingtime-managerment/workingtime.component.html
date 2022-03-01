@@ -1,0 +1,85 @@
+<div class="card">
+  <div class="card-header">
+    <div class="row">
+      <div class="col">
+        <span>Thời gian làm việc: </span>
+      </div>
+      <div class="col-auto">
+        <button type="button" (click)="openAdd()" class="btn btn-primary"><i class="fa fa-plus"></i>
+          Add</button>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    <ngx-datatable 
+    class="material" 
+    [rows]="workingTimes" 
+    [rowHeight]="50" 
+    [columnMode]="'force'" 
+    [sortType]="'multi'" 
+    [headerHeight]="50" 
+    [footerHeight]="50" 
+    [externalPaging]="true"
+    [count]="paging.totalItems"
+    [offset]="paging.page - 1"
+    [limit]="paging.pageLimit"
+    (page)="loadWorkingTime($event)"   
+    >
+    <ngx-datatable-column name="Tên" >
+        <ng-template let-row="row" ngx-datatable-cell-template>
+            <span class="cursor-hover" (click)="choose(row)">{{ row.name}}</span>
+        </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Mô tả">
+      <ng-template let-row="row" ngx-datatable-cell-template>
+        <span>{{ row.bio}}</span>
+    </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column [width]="40">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+            <i (click)="openEdit(row.Emp_ID)" class="fa fa-edit text-primary mr-1 pointer"></i>
+            <i (click)="delete(row.Emp_ID)" class="fa fa-trash-o text-danger pointer"></i>
+        </ng-template>
+    </ngx-datatable-column>
+</ngx-datatable>
+  </div>
+</div>
+
+<div bsModal #editModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-child-name">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form [formGroup]="workingTimeForm" (ngSubmit)="save()">
+        <div class="modal-header">
+          <h4 id="dialog-child-name" class="modal-title pull-left">Thời gian làm việc</h4>
+          <!-- <button type="button" class="close pull-right" aria-label="Close" (click)="hideModal()">
+          <span aria-hidden="true">&times;</span>
+        </button> -->
+        </div>
+        <div class="modal-body">
+
+          <div class="form-group">
+            <label for="name">Tên</label>
+            <input type="text" class="form-control" id="name" formControlName="name">
+          </div>
+          <div class="form-group">
+            <label for="bio">Mô tả</label>
+            <textarea class="form-control" id="bio" formControlName="bio" rows="3"></textarea>
+          </div>
+          <div>
+            <label for="period">Khung giờ</label>
+            <ul class="time-slot-area" formArrayName="workingTimeDetails">
+              <li *ngFor="let ts of timeSlots; index as i">
+                <input #tsCBox type="checkbox" (change)="onCheckChange($event)" [value]="ts.id">
+                {{ts.name}} ({{ts.period}})
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary">Đóng</button>
+          <button type="submit" class="btn btn-primary">Lưu</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
